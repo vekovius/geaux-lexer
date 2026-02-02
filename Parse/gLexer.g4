@@ -27,6 +27,14 @@ fragment ALNUM
 
 WS : [ \t\r\n]+ -> skip ;
 
+// Comments
+LINE_COMMENT
+   : '//' ~[\r\n]* -> skip
+   ;
+BLOCK_COMMENT
+   : '/*' .*? '*/' -> skip
+   ;
+
 // Keywords
 VAR      
    : 
