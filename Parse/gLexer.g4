@@ -8,6 +8,8 @@ lexer grammar gLexer;
 
 @members {
    StringBuilder sb;
+
+   //Need to translate escape sequences to ints (maybe chars too) (for strings)
    private int stringToInt(String target) {
       // TODO: Implement me!
       return 0;
@@ -25,12 +27,28 @@ fragment ALNUM
    : [A-Za-z_0-9]
    ;
 
+fragment IDENTIFIER_START
+   : [A-Za-z_]
+   ; 
+
+fragment HEXADECIMAL
+   : [0-9A-Fa-f]
+   ;
+
+fragment ESC_SEQ
+   :	'\\' ['"\\abfnrtv?]		//other escape sequences
+   |	'\\' [0-7]+			//octal escape sequences
+   | 	'\\' 'x' HEXADECIMAL+		//hexidecimal escape sequences
+   ;
+
+//Whitespace
 WS : [ \t\r\n]+ -> skip ;
 
 // Comments
 LINE_COMMENT
    : '//' ~[\r\n]* -> skip
    ;
+
 BLOCK_COMMENT
    : '/*' .*? '*/' -> skip
    ;
@@ -94,11 +112,11 @@ UNION
    ;
 
 // Operators (mult-char first)
-ANDAND   
+AND   
    : 
    '&&'
    ;
-OROR     
+OR     
    : 
    '||'
    ;
@@ -153,11 +171,11 @@ RPAREN
    : 
    ')'
    ;
-AMP   
+BITWISEAND   
    : 
    '&'
    ;
-BAR   
+BITWISEOR   
    : 
    '|'
    ;
@@ -182,10 +200,13 @@ RBRACK
    ']'
    ;
 
-INTEGER_CONSTANT  : DIGIT+ ;
+//need to expand to include octal & hexidecimal
+INTEGER_CONSTANT : DIGIT+ ;
+
+STRING_LITERAL : '"'(ESC_SEQ | ~["\\\n\r])*'"' ; 
 
 // Identifier
-IDENTIFIER : ALPHA ALNUM* ;
+IDENTIFIER : IDENTIFIER_START ALNUM* ;
 
 // Fallback
 ERROR_CHAR : . ;
