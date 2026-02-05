@@ -1,4 +1,8 @@
 bin/
+target/
 Parse/antlr_build/
 *.class
 *.log
+solution_report.txt
+final_report.txt
+report.txt
