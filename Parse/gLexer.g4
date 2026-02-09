@@ -123,7 +123,9 @@ INTEGER_CONSTANT
 //only takes starting quotes to enter STRING_MODE
 STRING_START
    : '"'
-   { sb = new StringBuilder(); }
+   { sb = new StringBuilder();
+     sb.append("\""); 
+   }
    -> pushMode(STRING_MODE), skip
    ;
 
@@ -162,7 +164,8 @@ STRING_NORMAL
 //closing quote, returns fully complete STRING_LITERAL
 STRING_LITERAL
    : '"'
-   { 
+   {
+   	sb.append("\""); 
 	setText(sb.toString());
    } -> popMode
    ;
